@@ -43,8 +43,8 @@ def train(args, G, D):
     # Construct the criterion and optimizer
     crit_AE  = torch.nn.L1Loss(reduction='sum').cuda()
     crit_REG = KLDLoss().cuda()
-    optim_G = torch.optim.Adam(G.parameters(), lr=2e-4)
-    optim_D = torch.optim.Adam(D.parameters(), lr=2e-4)
+    optim_G = torch.optim.Adam(G.parameters(), lr=1e-4)
+    optim_D = torch.optim.Adam(D.parameters(), lr=1e-4)
     model_path = os.path.join(args.root_folder, 'Model', 'last.pth')
     if os.path.exists(model_path):
         state_dict = torch.load(model_path)
@@ -136,7 +136,7 @@ def train(args, G, D):
 
 def inference(args, G, z = None, n = 64, file_name = '???'):
     if z is None:
-        z = torch.randn(n, 512)
+        z = torch.randn(n, args.z_dim).cuda()
     G.eval()
     with torch.no_grad():
         fake_img = G(z)
